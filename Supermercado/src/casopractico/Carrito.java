@@ -62,7 +62,7 @@ public class Carrito {
 		for (int i=0; i<productosCarrito().size(); i++) {
 			
 			if (producto.equalsIgnoreCase(productosCarrito.get(i).getNombre())) {
-				System.out.println("El producto " + producto.toLowerCase() + "se encuentra en el carrito y vale " 
+				System.out.println("El producto " + producto.toLowerCase() + " se encuentra en el carrito y vale " 
 				+ productosCarrito.get(i).getPrecio() + "€.");
 				contador-=1;
 			}

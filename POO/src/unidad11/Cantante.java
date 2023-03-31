@@ -8,14 +8,16 @@ public class Cantante {
 	private String nombreArtistico;
 	private Estilo estilo;
 	private int numeroDiscos;
+	private Disco disco;
 	
-	Cantante(String nombre, String apellidos, int edad, String nombreArtistico, Estilo estilo, int numeroDiscos) {
+	Cantante(String nombre, String apellidos, int edad, String nombreArtistico, Estilo estilo, int numeroDiscos, Disco disco) {
 		this.nombre=nombre;
 		this.apellidos=apellidos;
 		this.edad=edad;
 		this.nombreArtistico=nombreArtistico;
 		this.estilo=estilo;
 		this.numeroDiscos=numeroDiscos;
+		this.disco=disco;
 	}
 	
 	Cantante(String nombreArtistico, Estilo estilo) {
@@ -63,6 +65,14 @@ public class Cantante {
 		this.numeroDiscos = numeroDiscos;
 	}
 	
+	public Disco getDisco() {
+		return disco;
+	}
+
+	public void setDisco(Disco disco) {
+		this.disco = disco;
+	}
+
 	@Override
 	public String toString() {
 		return "Cantante [nombre=" + nombre + ", apellidos=" + apellidos + ", edad=" + edad + ", nombreArtistico="
