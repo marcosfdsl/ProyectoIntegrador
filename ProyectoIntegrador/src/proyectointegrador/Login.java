@@ -17,16 +17,11 @@ public class Login extends JFrame {
 	private JPanel panelLuchadores;
 	private JPanel panelEventos;
 	private JPanel panelApuestas;
-	private JTable tablaPesoPluma;
 	private JPanel rankingPesoPluma;
 	private JPanel rankingPesoMosca;
 	private JPanel rankingPesoLigero;
 	private JPanel rankingPesoMedio;
 	private JPanel rankingPesoPesado;
-	private JTable table_1;
-	private JTable table_2;
-	private JTable table_3;
-	private JTable table_4;
 	private JPasswordField txtRegistroContrasena;
 	private JTextField txtRegistroNombre;
 	private JPanel registrarse;
@@ -278,6 +273,9 @@ public class Login extends JFrame {
 		JMenuItem menuPesoPluma = new JMenuItem("Peso Pluma");
 		menuPesoPluma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//tablaLuchadores.clearSelection(); ARREGLAR
+				
 				if (panelLuchadores.isVisible() == true) {
 					panelRankings.setVisible(false);
 				}
@@ -454,6 +452,7 @@ public class Login extends JFrame {
 		menuEventos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				if (panelRankings.isVisible() == true) {
 					panelRankings.setVisible(false);
 				}
@@ -681,9 +680,6 @@ public class Login extends JFrame {
 
 	}
 
-	public JTable getTablaPesoPluma() {
-		return tablaPesoPluma;
-	}
 }
 
 class ResultSetModeloTabla extends AbstractTableModel {
