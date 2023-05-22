@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			
-			Connection miConexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ufc", "root", "");
+			Connection miConexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ufc_db", "root", "");
 			Statement miStatement = miConexion.createStatement();
 			ResultSet miResultset = miStatement.executeQuery("SELECT Nombre, Apodo FROM luchador");
 			while (miResultset.next()) {
