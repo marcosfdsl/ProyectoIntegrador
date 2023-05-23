@@ -274,10 +274,8 @@ public class Login extends JFrame {
 		menuPesoPluma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//tablaLuchadores.clearSelection(); ARREGLAR
-				
 				if (panelLuchadores.isVisible() == true) {
-					panelRankings.setVisible(false);
+					panelLuchadores.setVisible(false);
 				}
 				if (panelEventos.isVisible() == true) {
 					panelEventos.setVisible(false);
@@ -309,7 +307,7 @@ public class Login extends JFrame {
 		menuPesoMosca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelLuchadores.isVisible() == true) {
-					panelRankings.setVisible(false);
+					panelLuchadores.setVisible(false);
 				}
 				if (panelEventos.isVisible() == true) {
 					panelEventos.setVisible(false);
@@ -340,7 +338,7 @@ public class Login extends JFrame {
 		menuPesoLigero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelLuchadores.isVisible() == true) {
-					panelRankings.setVisible(false);
+					panelLuchadores.setVisible(false);
 				}
 				if (panelEventos.isVisible() == true) {
 					panelEventos.setVisible(false);
@@ -371,7 +369,7 @@ public class Login extends JFrame {
 		menuPesoMedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelLuchadores.isVisible() == true) {
-					panelRankings.setVisible(false);
+					panelLuchadores.setVisible(false);
 				}
 				if (panelEventos.isVisible() == true) {
 					panelEventos.setVisible(false);
@@ -402,7 +400,7 @@ public class Login extends JFrame {
 		menuPesoPesado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelLuchadores.isVisible() == true) {
-					panelRankings.setVisible(false);
+					panelLuchadores.setVisible(false);
 				}
 				if (panelEventos.isVisible() == true) {
 					panelEventos.setVisible(false);
