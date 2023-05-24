@@ -40,6 +40,7 @@ public class Login extends JFrame {
 	private int cuenta4 = 0;
 	private JTextField txtRegistroNombre;
 	private JLabel mensajeUsuarioCreado;
+	private JPanel bienvenida;
 
 	public static void main(String[] args) {
 
@@ -62,12 +63,139 @@ public class Login extends JFrame {
 
 		setContentPane(lamina1);
 		lamina1.setLayout(null);
-		final String usuario = "a";
-		final String contrasena = "a";
 
 		interfaz = new JPanel();
 		interfaz.setBounds(0, 0, 986, 563);
 		interfaz.setVisible(false);
+
+		bienvenida = new JPanel();
+		bienvenida.setBounds(0, 21, 986, 542);
+		lamina1.add(bienvenida);
+		bienvenida.setLayout(null);
+		bienvenida.setVisible(false);
+
+		JLabel imagenBienvenida = new JLabel("");
+		imagenBienvenida.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/LOGO.png")));
+		imagenBienvenida.setBounds(0, 0, 1000, 600);
+		bienvenida.add(imagenBienvenida);
+
+		login = new JPanel();
+		login.setBorder(new LineBorder(new Color(255, 0, 0)));
+		login.setBackground(new Color(0, 0, 0));
+		login.setBounds(298, 35, 389, 354);
+		lamina1.add(login);
+		login.setLayout(null);
+
+		JPanel titulo = new JPanel();
+		titulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		titulo.setBackground(new Color(255, 0, 0));
+		titulo.setBounds(83, 10, 222, 43);
+		login.add(titulo);
+
+		JLabel labelTitulo2_1 = new JLabel("UFC DATABASE");
+		labelTitulo2_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		titulo.add(labelTitulo2_1);
+		JButton btnNewButton = new JButton("Login");
+		btnNewButton.setBackground(new Color(255, 0, 0));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bienvenida.setVisible(true);
+
+				String sql = "SELECT * FROM usuario WHERE NombreUsuario = ? AND Contrasena = ?";
+				PreparedStatement statement = null;
+				try {
+					statement = miConexion.prepareStatement(sql);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					statement.setString(1, txtUsuario.getText());
+					statement.setString(2, txtContrasena.getText());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				ResultSet resultSet = null;
+				try {
+					resultSet = statement.executeQuery();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					if (resultSet.next()) {
+						login.setVisible(false);
+						interfaz.setVisible(true);
+					} else {
+						accesoDenegado.setText("Usuario o contraseña incorrectos");
+						accesoDenegado.setVisible(true);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					resultSet.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					statement.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnNewButton.setBounds(125, 269, 141, 37);
+		login.add(btnNewButton);
+
+		JLabel Contrasena = new JLabel("Contraseña:", SwingConstants.CENTER);
+		Contrasena.setForeground(Color.red);
+		Contrasena.setBounds(105, 161, 178, 42);
+		login.add(Contrasena);
+		Contrasena.setFont(new Font("Tahoma", Font.PLAIN, 23));
+
+		txtContrasena = new JPasswordField();
+		txtContrasena.setBounds(105, 213, 178, 19);
+		login.add(txtContrasena);
+
+		JLabel Usuario = new JLabel("Usuario:", SwingConstants.CENTER);
+		Usuario.setBounds(105, 86, 178, 36);
+		login.add(Usuario);
+		Usuario.setForeground(Color.red);
+		Usuario.setFont(new Font("Tahoma", Font.PLAIN, 23));
+
+		txtUsuario = new JTextField();
+		txtUsuario.setBounds(105, 132, 178, 19);
+		login.add(txtUsuario);
+		txtUsuario.setColumns(10);
+
+		JButton btnRegistrarse = new JButton("Registrarse");
+		btnRegistrarse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				login.setVisible(false);
+				registrarse.setVisible(true);
+
+			}
+		});
+		btnRegistrarse.setBounds(125, 311, 141, 33);
+		login.add(btnRegistrarse);
+		btnRegistrarse.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRegistrarse.setBackground(Color.RED);
+
+		accesoDenegado = new JLabel("Acceso denegado", SwingConstants.CENTER);
+		accesoDenegado.setForeground(Color.red);
+		accesoDenegado.setBounds(68, 240, 253, 19);
+		login.add(accesoDenegado);
+
+		mensajeUsuarioCreado = new JLabel("Usuario registrado con exito", SwingConstants.CENTER);
+		mensajeUsuarioCreado.setForeground(Color.GREEN);
+		mensajeUsuarioCreado.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		mensajeUsuarioCreado.setBounds(68, 63, 253, 25);
+		login.add(mensajeUsuarioCreado);
+		mensajeUsuarioCreado.setVisible(false);
+		accesoDenegado.setVisible(false);
 		lamina1.add(interfaz);
 		lamina1.add(interfaz);
 
@@ -280,7 +408,7 @@ public class Login extends JFrame {
 		JMenuItem menuPesoPluma = new JMenuItem("Peso Pluma");
 		menuPesoPluma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				bienvenida.setVisible(false);
 				if (panelLuchadores.isVisible() == true) {
 					panelLuchadores.setVisible(false);
 				}
@@ -313,6 +441,7 @@ public class Login extends JFrame {
 		JMenuItem menuPesoMosca = new JMenuItem("Peso Mosca");
 		menuPesoMosca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				bienvenida.setVisible(false);
 				if (panelLuchadores.isVisible() == true) {
 					panelLuchadores.setVisible(false);
 				}
@@ -344,6 +473,7 @@ public class Login extends JFrame {
 		JMenuItem menuPesoLigero = new JMenuItem("Peso Ligero");
 		menuPesoLigero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				bienvenida.setVisible(false);
 				if (panelLuchadores.isVisible() == true) {
 					panelLuchadores.setVisible(false);
 				}
@@ -375,6 +505,7 @@ public class Login extends JFrame {
 		JMenuItem menuPesoMedio = new JMenuItem("Peso Medio");
 		menuPesoMedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				bienvenida.setVisible(false);
 				if (panelLuchadores.isVisible() == true) {
 					panelLuchadores.setVisible(false);
 				}
@@ -406,6 +537,7 @@ public class Login extends JFrame {
 		JMenuItem menuPesoPesado = new JMenuItem("Peso Pesado");
 		menuPesoPesado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				bienvenida.setVisible(false);
 				if (panelLuchadores.isVisible() == true) {
 					panelLuchadores.setVisible(false);
 				}
@@ -438,6 +570,7 @@ public class Login extends JFrame {
 		menuLuchadores.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				bienvenida.setVisible(false);
 				if (panelRankings.isVisible() == true) {
 					panelRankings.setVisible(false);
 				}
@@ -457,7 +590,7 @@ public class Login extends JFrame {
 		menuEventos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				bienvenida.setVisible(false);
 				if (panelRankings.isVisible() == true) {
 					panelRankings.setVisible(false);
 				}
@@ -477,6 +610,7 @@ public class Login extends JFrame {
 		menuApuestas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				bienvenida.setVisible(false);
 				if (panelRankings.isVisible() == true) {
 					panelRankings.setVisible(false);
 				}
@@ -513,305 +647,187 @@ public class Login extends JFrame {
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 47));
 		lblNewLabel_4.setBounds(397, 120, 192, 112);
 		panelApuestas.add(lblNewLabel_4);
-		
-				login = new JPanel();
-				login.setBorder(new LineBorder(new Color(255, 0, 0)));
-				login.setBackground(new Color(0, 0, 0));
-				login.setBounds(298, 35, 389, 354);
-				lamina1.add(login);
-				login.setLayout(null);
-				
-						JPanel titulo = new JPanel();
-						titulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-						titulo.setBackground(new Color(255, 0, 0));
-						titulo.setBounds(83, 10, 222, 43);
-						login.add(titulo);
-						
-								JLabel labelTitulo2_1 = new JLabel("UFC DATABASE");
-								labelTitulo2_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
-								titulo.add(labelTitulo2_1);
-								JButton btnNewButton = new JButton("Login");
-								btnNewButton.setBackground(new Color(255, 0, 0));
-								btnNewButton.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent e) {
 
-										String sql = "SELECT * FROM usuario WHERE NombreUsuario = ? AND Contrasena = ?";
-										PreparedStatement statement = null;
-										try {
-											statement = miConexion.prepareStatement(sql);
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
-										try {
-											statement.setString(1, txtUsuario.getText());
-											statement.setString(2, txtContrasena.getText());
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
-										ResultSet resultSet = null;
-										try {
-											resultSet = statement.executeQuery();
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
+		registrarse = new JPanel();
+		registrarse.setLayout(null);
+		registrarse.setBorder(new LineBorder(new Color(255, 0, 0)));
+		registrarse.setBackground(Color.BLACK);
+		registrarse.setBounds(298, 35, 389, 421);
+		lamina1.add(registrarse);
+		registrarse.setVisible(false);
 
-										try {
-											if (resultSet.next()) {
-											    login.setVisible(false);
-											    interfaz.setVisible(true);
-											} else {
-												accesoDenegado.setText("Usuario o contraseña incorrectos");
-												accesoDenegado.setVisible(true);
-											}
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_1.setBackground(Color.RED);
+		panel_1.setBounds(83, 10, 222, 43);
+		registrarse.add(panel_1);
 
-										try {
-											resultSet.close();
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
-										try {
-											statement.close();
-										} catch (SQLException e1) {
-											e1.printStackTrace();
-										}
+		JLabel labelTitulo = new JLabel("UFC DATABASE");
+		labelTitulo.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		panel_1.add(labelTitulo);
 
-										
-									}
-								});
-								btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-								btnNewButton.setBounds(125, 269, 141, 37);
-								login.add(btnNewButton);
-								
-										JLabel Contrasena = new JLabel("Contraseña:", SwingConstants.CENTER);
-										Contrasena.setForeground(Color.red);
-										Contrasena.setBounds(105, 161, 178, 42);
-										login.add(Contrasena);
-										Contrasena.setFont(new Font("Tahoma", Font.PLAIN, 23));
-										
-												txtContrasena = new JPasswordField();
-												txtContrasena.setBounds(105, 213, 178, 19);
-												login.add(txtContrasena);
-												
-														JLabel Usuario = new JLabel("Usuario:", SwingConstants.CENTER);
-														Usuario.setBounds(105, 86, 178, 36);
-														login.add(Usuario);
-														Usuario.setForeground(Color.red);
-														Usuario.setFont(new Font("Tahoma", Font.PLAIN, 23));
-														
-																txtUsuario = new JTextField();
-																txtUsuario.setBounds(105, 132, 178, 19);
-																login.add(txtUsuario);
-																txtUsuario.setColumns(10);
-																
-																		JButton btnRegistrarse = new JButton("Registrarse");
-																		btnRegistrarse.addActionListener(new ActionListener() {
-																			public void actionPerformed(ActionEvent e) {
-																				login.setVisible(false);
-																				registrarse.setVisible(true);
+		JLabel Contrasena_1 = new JLabel("Contraseña:");
+		Contrasena_1.setForeground(Color.RED);
+		Contrasena_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		Contrasena_1.setBounds(83, 165, 222, 42);
+		registrarse.add(Contrasena_1);
 
-																			}
-																		});
-																		btnRegistrarse.setBounds(125, 311, 141, 33);
-																		login.add(btnRegistrarse);
-																		btnRegistrarse.setFont(new Font("Tahoma", Font.PLAIN, 20));
-																		btnRegistrarse.setBackground(Color.RED);
-																		
-																				accesoDenegado = new JLabel("Acceso denegado", SwingConstants.CENTER);
-																				accesoDenegado.setForeground(Color.red);
-																				accesoDenegado.setBounds(68, 240, 253, 19);
-																				login.add(accesoDenegado);
-																				
-																						mensajeUsuarioCreado = new JLabel("Usuario registrado con exito", SwingConstants.CENTER);
-																						mensajeUsuarioCreado.setForeground(Color.GREEN);
-																						mensajeUsuarioCreado.setFont(new Font("Tahoma", Font.PLAIN, 20));
-																						mensajeUsuarioCreado.setBounds(68, 63, 253, 25);
-																						login.add(mensajeUsuarioCreado);
-																						
-																								registrarse = new JPanel();
-																								registrarse.setLayout(null);
-																								registrarse.setBorder(new LineBorder(new Color(255, 0, 0)));
-																								registrarse.setBackground(Color.BLACK);
-																								registrarse.setBounds(298, 35, 389, 421);
-																								lamina1.add(registrarse);
-																								registrarse.setVisible(false);
-																								
-																										JPanel panel_1 = new JPanel();
-																										panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-																										panel_1.setBackground(Color.RED);
-																										panel_1.setBounds(83, 10, 222, 43);
-																										registrarse.add(panel_1);
-																										
-																												JLabel labelTitulo = new JLabel("UFC DATABASE");
-																												labelTitulo.setFont(new Font("Tahoma", Font.PLAIN, 25));
-																												panel_1.add(labelTitulo);
-																												
-																														JLabel Contrasena_1 = new JLabel("Contraseña:");
-																														Contrasena_1.setForeground(Color.RED);
-																														Contrasena_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-																														Contrasena_1.setBounds(83, 165, 222, 42);
-																														registrarse.add(Contrasena_1);
-																														
-																																JPasswordField txtRegistroContrasena_1 = new JPasswordField();
-																																txtRegistroContrasena_1.setBounds(83, 203, 222, 19);
-																																registrarse.add(txtRegistroContrasena_1);
-																																
-																																		JLabel Usuario_1 = new JLabel("Nombre de usuario:");
-																																		Usuario_1.setForeground(Color.RED);
-																																		Usuario_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-																																		Usuario_1.setBounds(83, 53, 222, 36);
-																																		registrarse.add(Usuario_1);
-																																		
-																																				txtRegistroUsuario = new JTextField();
-																																				txtRegistroUsuario.setColumns(10);
-																																				txtRegistroUsuario.setBounds(83, 91, 222, 19);
-																																				registrarse.add(txtRegistroUsuario);
-																																				
-																																						txtRegistroConfirmarContrasena = new JPasswordField();
-																																						txtRegistroConfirmarContrasena.setBounds(83, 256, 222, 19);
-																																						registrarse.add(txtRegistroConfirmarContrasena);
-																																						
-																																								JButton btnRegistrarse_1 = new JButton("Registrarse");
-																																								btnRegistrarse_1.addActionListener(new ActionListener() {
-																																									public void actionPerformed(ActionEvent e) {
-																																										mensajeUsuarioCreado.setVisible(false);
-																																										int errores = 0;
-																																										String regex = "^[\\w!#$%&'+/=?`{|}^-]+(?:\\.[\\w!#$%&'+/=?`{|}^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}";
-																																										Pattern pattern = Pattern.compile(regex);
-																																										Matcher matcher = pattern.matcher(txtRegistroMail.getText());
+		JPasswordField txtRegistroContrasena_1 = new JPasswordField();
+		txtRegistroContrasena_1.setBounds(83, 203, 222, 19);
+		registrarse.add(txtRegistroContrasena_1);
 
-																																										if (txtRegistroUsuario.getText().trim().length() < 5) {
-																																											aviso.setVisible(true);
-																																											if (cuenta1 == 0) {
-																																												aviso.setText("Nombre muy corto");
-																																												cuenta1++;
-																																											} else {
-																																												aviso.setText("Nombre muy corto x" + cuenta1);
-																																												cuenta1++;
-																																											}
-																																											errores++;
-																																										} else if (!(String.valueOf(txtRegistroContrasena_1.getPassword())
-																																												.equals(String.valueOf(txtRegistroConfirmarContrasena.getPassword())))) {
-																																											aviso.setVisible(true);
-																																											if (cuenta2 == 0) {
-																																												aviso.setText("Las contraseñas no son iguales");
-																																												cuenta2++;
-																																											} else {
-																																												aviso.setText("Las contraseñas no son iguales x" + cuenta2);
-																																												cuenta2++;
-																																											}
-																																											errores++;
-																																										} else if (txtRegistroContrasena_1.getPassword().length < 6
-																																												|| txtRegistroConfirmarContrasena.getPassword().length < 6) {
-																																											aviso.setVisible(true);
-																																											if (cuenta3 == 0) {
-																																												aviso.setText("Contraseña muy corta");
-																																												cuenta3++;
-																																											} else {
-																																												aviso.setText("Contraseña muy corta x" + cuenta3);
-																																												cuenta3++;
-																																											}
-																																											errores++;
-																																										} else if (matcher.matches() == false) {
-																																											aviso.setVisible(true);
-																																											if (cuenta4 == 0) {
-																																												aviso.setText("Email no permitido");
-																																												cuenta4++;
-																																											} else {
-																																												aviso.setText("Email no permitido x" + cuenta4);
-																																												cuenta4++;
-																																											}
-																																											errores++;
-																																										}
+		JLabel Usuario_1 = new JLabel("Nombre de usuario:");
+		Usuario_1.setForeground(Color.RED);
+		Usuario_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		Usuario_1.setBounds(83, 53, 222, 36);
+		registrarse.add(Usuario_1);
 
-																																										if (errores == 0) {
-																																											aviso.setVisible(false);
-																																											Statement st7;
-																																											try {
-																																												st7 = miConexion.createStatement();
-																																												st7.executeUpdate(
-																																														"INSERT INTO usuario (NombreUsuario, Nombre, Contrasena, Email, Monto) VALUES ('"
-																																																+ txtRegistroUsuario.getText() + "', '" + txtRegistroNombre.getText() + "', '"
-																																																+ txtRegistroContrasena_1.getText() + "', '" + txtRegistroMail.getText()
-																																																+ "', 0)");
-																																											} catch (SQLException e1) {
-																																												e1.printStackTrace();
-																																											}
-																																											mensajeUsuarioCreado.setVisible(true);
-																																											registrarse.setVisible(false);
-																																											login.setVisible(true);
+		txtRegistroUsuario = new JTextField();
+		txtRegistroUsuario.setColumns(10);
+		txtRegistroUsuario.setBounds(83, 91, 222, 19);
+		registrarse.add(txtRegistroUsuario);
 
-																																											// AQUI SE TIENE Q HACER VISIBLE EL JPANEL DE "CUENTA CREADA CORRECTAMENTE"
-																																										}
+		txtRegistroConfirmarContrasena = new JPasswordField();
+		txtRegistroConfirmarContrasena.setBounds(83, 256, 222, 19);
+		registrarse.add(txtRegistroConfirmarContrasena);
 
-																																									}
-																																								});
-																																								btnRegistrarse_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-																																								btnRegistrarse_1.setBackground(Color.RED);
-																																								btnRegistrarse_1.setBounds(47, 370, 140, 33);
-																																								registrarse.add(btnRegistrarse_1);
-																																								
-																																										JLabel Contrasena_1_1 = new JLabel("Confirmar contraseña:");
-																																										Contrasena_1_1.setForeground(Color.RED);
-																																										Contrasena_1_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-																																										Contrasena_1_1.setBounds(83, 219, 251, 42);
-																																										registrarse.add(Contrasena_1_1);
-																																										
-																																												JLabel Contrasena_1_2 = new JLabel("Email:");
-																																												Contrasena_1_2.setForeground(Color.RED);
-																																												Contrasena_1_2.setFont(new Font("Tahoma", Font.PLAIN, 23));
-																																												Contrasena_1_2.setBounds(83, 272, 222, 42);
-																																												registrarse.add(Contrasena_1_2);
-																																												
-																																														aviso = new JLabel("aviso", SwingConstants.CENTER);
-																																														aviso.setForeground(Color.RED);
-																																														aviso.setFont(new Font("Stencil", Font.PLAIN, 20));
-																																														aviso.setBounds(0, 337, 389, 31);
-																																														registrarse.add(aviso);
-																																														aviso.setVisible(false);
-																																														
-																																																txtRegistroMail = new JTextField();
-																																																txtRegistroMail.setColumns(10);
-																																																txtRegistroMail.setBounds(83, 311, 222, 19);
-																																																registrarse.add(txtRegistroMail);
-																																																
-																																																		JLabel Usuario_1_1 = new JLabel("Nombre completo:");
-																																																		Usuario_1_1.setForeground(Color.RED);
-																																																		Usuario_1_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-																																																		Usuario_1_1.setBounds(83, 110, 222, 36);
-																																																		registrarse.add(Usuario_1_1);
-																																																		
-																																																				txtRegistroNombre = new JTextField();
-																																																				txtRegistroNombre.setColumns(10);
-																																																				txtRegistroNombre.setBounds(83, 148, 222, 19);
-																																																				registrarse.add(txtRegistroNombre);
-																																																				
-																																																						JButton btnVolverLogin = new JButton("Login");
-																																																						btnVolverLogin.addActionListener(new ActionListener() {
-																																																							public void actionPerformed(ActionEvent e) {
-																																																								txtRegistroUsuario.setText("");
-																																																								txtRegistroNombre.setText("");
-																																																								txtRegistroContrasena_1.setText("");
-																																																								txtRegistroConfirmarContrasena.setText("");
-																																																								txtRegistroMail.setText("");
-																																																								cuenta1 = 0;
-																																																								cuenta2 = 0;
-																																																								cuenta3 = 0;
-																																																								cuenta4 = 0;
-																																																								aviso.setVisible(false);
-																																																								registrarse.setVisible(false);
-																																																								login.setVisible(true);
-																																																								mensajeUsuarioCreado.setVisible(false);
-																																																							}
-																																																						});
-																																																						btnVolverLogin.setFont(new Font("Tahoma", Font.PLAIN, 20));
-																																																						btnVolverLogin.setBackground(Color.RED);
-																																																						btnVolverLogin.setBounds(203, 370, 140, 33);
-																																																						registrarse.add(btnVolverLogin);
-																						mensajeUsuarioCreado.setVisible(false);
-																						accesoDenegado.setVisible(false);
+		JButton btnRegistrarse_1 = new JButton("Registrarse");
+		btnRegistrarse_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mensajeUsuarioCreado.setVisible(false);
+				int errores = 0;
+				String regex = "^[\\w!#$%&'+/=?`{|}^-]+(?:\\.[\\w!#$%&'+/=?`{|}^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}";
+				Pattern pattern = Pattern.compile(regex);
+				Matcher matcher = pattern.matcher(txtRegistroMail.getText());
+
+				if (txtRegistroUsuario.getText().trim().length() < 5) {
+					aviso.setVisible(true);
+					if (cuenta1 == 0) {
+						aviso.setText("Nombre muy corto");
+						cuenta1++;
+					} else {
+						aviso.setText("Nombre muy corto x" + cuenta1);
+						cuenta1++;
+					}
+					errores++;
+				} else if (!(String.valueOf(txtRegistroContrasena_1.getPassword())
+						.equals(String.valueOf(txtRegistroConfirmarContrasena.getPassword())))) {
+					aviso.setVisible(true);
+					if (cuenta2 == 0) {
+						aviso.setText("Las contraseñas no son iguales");
+						cuenta2++;
+					} else {
+						aviso.setText("Las contraseñas no son iguales x" + cuenta2);
+						cuenta2++;
+					}
+					errores++;
+				} else if (txtRegistroContrasena_1.getPassword().length < 6
+						|| txtRegistroConfirmarContrasena.getPassword().length < 6) {
+					aviso.setVisible(true);
+					if (cuenta3 == 0) {
+						aviso.setText("Contraseña muy corta");
+						cuenta3++;
+					} else {
+						aviso.setText("Contraseña muy corta x" + cuenta3);
+						cuenta3++;
+					}
+					errores++;
+				} else if (matcher.matches() == false) {
+					aviso.setVisible(true);
+					if (cuenta4 == 0) {
+						aviso.setText("Email no permitido");
+						cuenta4++;
+					} else {
+						aviso.setText("Email no permitido x" + cuenta4);
+						cuenta4++;
+					}
+					errores++;
+				}
+
+				if (errores == 0) {
+					aviso.setVisible(false);
+					Statement st7;
+					try {
+						st7 = miConexion.createStatement();
+						st7.executeUpdate(
+								"INSERT INTO usuario (NombreUsuario, Nombre, Contrasena, Email, Monto) VALUES ('"
+										+ txtRegistroUsuario.getText() + "', '" + txtRegistroNombre.getText() + "', '"
+										+ txtRegistroContrasena_1.getText() + "', '" + txtRegistroMail.getText()
+										+ "', 0)");
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					mensajeUsuarioCreado.setVisible(true);
+					registrarse.setVisible(false);
+					login.setVisible(true);
+
+					// AQUI SE TIENE Q HACER VISIBLE EL JPANEL DE "CUENTA CREADA CORRECTAMENTE"
+				}
+
+			}
+		});
+		btnRegistrarse_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRegistrarse_1.setBackground(Color.RED);
+		btnRegistrarse_1.setBounds(47, 370, 140, 33);
+		registrarse.add(btnRegistrarse_1);
+
+		JLabel Contrasena_1_1 = new JLabel("Confirmar contraseña:");
+		Contrasena_1_1.setForeground(Color.RED);
+		Contrasena_1_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		Contrasena_1_1.setBounds(83, 219, 251, 42);
+		registrarse.add(Contrasena_1_1);
+
+		JLabel Contrasena_1_2 = new JLabel("Email:");
+		Contrasena_1_2.setForeground(Color.RED);
+		Contrasena_1_2.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		Contrasena_1_2.setBounds(83, 272, 222, 42);
+		registrarse.add(Contrasena_1_2);
+
+		aviso = new JLabel("aviso", SwingConstants.CENTER);
+		aviso.setForeground(Color.RED);
+		aviso.setFont(new Font("Stencil", Font.PLAIN, 20));
+		aviso.setBounds(0, 337, 389, 31);
+		registrarse.add(aviso);
+		aviso.setVisible(false);
+
+		txtRegistroMail = new JTextField();
+		txtRegistroMail.setColumns(10);
+		txtRegistroMail.setBounds(83, 311, 222, 19);
+		registrarse.add(txtRegistroMail);
+
+		JLabel Usuario_1_1 = new JLabel("Nombre completo:");
+		Usuario_1_1.setForeground(Color.RED);
+		Usuario_1_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		Usuario_1_1.setBounds(83, 110, 222, 36);
+		registrarse.add(Usuario_1_1);
+
+		txtRegistroNombre = new JTextField();
+		txtRegistroNombre.setColumns(10);
+		txtRegistroNombre.setBounds(83, 148, 222, 19);
+		registrarse.add(txtRegistroNombre);
+
+		JButton btnVolverLogin = new JButton("Login");
+		btnVolverLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtRegistroUsuario.setText("");
+				txtRegistroNombre.setText("");
+				txtRegistroContrasena_1.setText("");
+				txtRegistroConfirmarContrasena.setText("");
+				txtRegistroMail.setText("");
+				cuenta1 = 0;
+				cuenta2 = 0;
+				cuenta3 = 0;
+				cuenta4 = 0;
+				aviso.setVisible(false);
+				registrarse.setVisible(false);
+				login.setVisible(true);
+				mensajeUsuarioCreado.setVisible(false);
+			}
+		});
+		btnVolverLogin.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnVolverLogin.setBackground(Color.RED);
+		btnVolverLogin.setBounds(203, 370, 140, 33);
+		registrarse.add(btnVolverLogin);
 		panelApuestas.setVisible(false);
 		panelEventos.setVisible(false);
 
