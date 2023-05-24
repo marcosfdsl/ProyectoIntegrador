@@ -68,17 +68,6 @@ public class Login extends JFrame {
 		interfaz.setBounds(0, 0, 986, 563);
 		interfaz.setVisible(false);
 
-		bienvenida = new JPanel();
-		bienvenida.setBounds(0, 21, 986, 542);
-		lamina1.add(bienvenida);
-		bienvenida.setLayout(null);
-		bienvenida.setVisible(false);
-
-		JLabel imagenBienvenida = new JLabel("");
-		imagenBienvenida.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/LOGO.png")));
-		imagenBienvenida.setBounds(0, 0, 1000, 600);
-		bienvenida.add(imagenBienvenida);
-
 		login = new JPanel();
 		login.setBorder(new LineBorder(new Color(255, 0, 0)));
 		login.setBackground(new Color(0, 0, 0));
@@ -99,7 +88,6 @@ public class Login extends JFrame {
 		btnNewButton.setBackground(new Color(255, 0, 0));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(true);
 
 				String sql = "SELECT * FROM usuario WHERE NombreUsuario = ? AND Contrasena = ?";
 				PreparedStatement statement = null;
@@ -125,6 +113,7 @@ public class Login extends JFrame {
 					if (resultSet.next()) {
 						login.setVisible(false);
 						interfaz.setVisible(true);
+						bienvenida.setVisible(true);
 					} else {
 						accesoDenegado.setText("Usuario o contraseña incorrectos");
 						accesoDenegado.setVisible(true);
@@ -196,6 +185,17 @@ public class Login extends JFrame {
 		login.add(mensajeUsuarioCreado);
 		mensajeUsuarioCreado.setVisible(false);
 		accesoDenegado.setVisible(false);
+
+		bienvenida = new JPanel();
+		bienvenida.setBounds(0, 21, 986, 542);
+		lamina1.add(bienvenida);
+		bienvenida.setLayout(null);
+		bienvenida.setVisible(false);
+
+		JLabel imagenBienvenida = new JLabel("");
+		imagenBienvenida.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/LOGO.png")));
+		imagenBienvenida.setBounds(0, 0, 1000, 600);
+		bienvenida.add(imagenBienvenida);
 		lamina1.add(interfaz);
 		lamina1.add(interfaz);
 
@@ -761,7 +761,6 @@ public class Login extends JFrame {
 					registrarse.setVisible(false);
 					login.setVisible(true);
 
-					// AQUI SE TIENE Q HACER VISIBLE EL JPANEL DE "CUENTA CREADA CORRECTAMENTE"
 				}
 
 			}
