@@ -49,7 +49,7 @@ public class Login extends JFrame {
 
 	public Login() {
 		try {
-			miConexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ufc_db", "root", "");
+			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "marcos", "1234");
 			miStatement = miConexion.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
