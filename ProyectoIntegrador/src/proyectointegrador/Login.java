@@ -8,7 +8,11 @@ import javax.swing.table.*;
 import java.sql.*;
 import java.util.regex.*;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ActionListener {
+
+	static Connection miConexion;
+	static Statement miStatement;
+	static ResultSet miResultset;
 
 	private JPanel lamina1;
 	private JTextField txtUsuario;
@@ -30,10 +34,6 @@ public class Login extends JFrame {
 	private JTextField txtRegistroMail;
 	private JLabel aviso;
 	private JLabel accesoDenegado;
-
-	static Connection miConexion;
-	static Statement miStatement;
-	static ResultSet miResultset;
 	private int cuenta1 = 0;
 	private int cuenta2 = 0;
 	private int cuenta3 = 0;
@@ -41,6 +41,13 @@ public class Login extends JFrame {
 	private JTextField txtRegistroNombre;
 	private JLabel mensajeUsuarioCreado;
 	private JPanel bienvenida;
+	private String usuarioApuestas;
+	private JComboBox comboApuesta;
+	private JLabel lblUsuarioApuestas;
+	private JLabel lblMontoApuestas;
+	private JComboBox comboApuestaGanador;
+	private JTextField importeApuesta;
+	private JButton botonApuesta;
 
 	public static void main(String[] args) {
 
@@ -68,124 +75,6 @@ public class Login extends JFrame {
 		interfaz.setBounds(0, 0, 986, 563);
 		interfaz.setVisible(false);
 
-		login = new JPanel();
-		login.setBorder(new LineBorder(new Color(255, 0, 0)));
-		login.setBackground(new Color(0, 0, 0));
-		login.setBounds(298, 35, 389, 354);
-		lamina1.add(login);
-		login.setLayout(null);
-
-		JPanel titulo = new JPanel();
-		titulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		titulo.setBackground(new Color(255, 0, 0));
-		titulo.setBounds(83, 10, 222, 43);
-		login.add(titulo);
-
-		JLabel labelTitulo2_1 = new JLabel("UFC DATABASE");
-		labelTitulo2_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		titulo.add(labelTitulo2_1);
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.setBackground(new Color(255, 0, 0));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				String sql = "SELECT * FROM usuario WHERE NombreUsuario = ? AND Contrasena = ?";
-				PreparedStatement statement = null;
-				try {
-					statement = miConexion.prepareStatement(sql);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				try {
-					statement.setString(1, txtUsuario.getText());
-					statement.setString(2, txtContrasena.getText());
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				ResultSet resultSet = null;
-				try {
-					resultSet = statement.executeQuery();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-				try {
-					if (resultSet.next()) {
-						login.setVisible(false);
-						interfaz.setVisible(true);
-						bienvenida.setVisible(true);
-					} else {
-						accesoDenegado.setText("Usuario o contraseña incorrectos");
-						accesoDenegado.setVisible(true);
-					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-				try {
-					resultSet.close();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				try {
-					statement.close();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-			}
-		});
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setBounds(125, 269, 141, 37);
-		login.add(btnNewButton);
-
-		JLabel Contrasena = new JLabel("Contraseña:", SwingConstants.CENTER);
-		Contrasena.setForeground(Color.red);
-		Contrasena.setBounds(105, 161, 178, 42);
-		login.add(Contrasena);
-		Contrasena.setFont(new Font("Tahoma", Font.PLAIN, 23));
-
-		txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(105, 213, 178, 19);
-		login.add(txtContrasena);
-
-		JLabel Usuario = new JLabel("Usuario:", SwingConstants.CENTER);
-		Usuario.setBounds(105, 86, 178, 36);
-		login.add(Usuario);
-		Usuario.setForeground(Color.red);
-		Usuario.setFont(new Font("Tahoma", Font.PLAIN, 23));
-
-		txtUsuario = new JTextField();
-		txtUsuario.setBounds(105, 132, 178, 19);
-		login.add(txtUsuario);
-		txtUsuario.setColumns(10);
-
-		JButton btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				login.setVisible(false);
-				registrarse.setVisible(true);
-
-			}
-		});
-		btnRegistrarse.setBounds(125, 311, 141, 33);
-		login.add(btnRegistrarse);
-		btnRegistrarse.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegistrarse.setBackground(Color.RED);
-
-		accesoDenegado = new JLabel("Acceso denegado", SwingConstants.CENTER);
-		accesoDenegado.setForeground(Color.red);
-		accesoDenegado.setBounds(68, 240, 253, 19);
-		login.add(accesoDenegado);
-
-		mensajeUsuarioCreado = new JLabel("Usuario registrado con exito", SwingConstants.CENTER);
-		mensajeUsuarioCreado.setForeground(Color.GREEN);
-		mensajeUsuarioCreado.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		mensajeUsuarioCreado.setBounds(68, 63, 253, 25);
-		login.add(mensajeUsuarioCreado);
-		mensajeUsuarioCreado.setVisible(false);
-		accesoDenegado.setVisible(false);
-
 		bienvenida = new JPanel();
 		bienvenida.setBounds(0, 21, 986, 542);
 		lamina1.add(bienvenida);
@@ -200,6 +89,87 @@ public class Login extends JFrame {
 		lamina1.add(interfaz);
 
 		interfaz.setLayout(null);
+
+		panelApuestas = new JPanel();
+		panelApuestas.setLayout(null);
+		panelApuestas.setBounds(0, 20, 986, 543);
+		interfaz.add(panelApuestas);
+		
+		lblUsuarioApuestas = new JLabel("Usuario: ");
+		lblMontoApuestas = new JLabel("Monto: ");
+
+		JLabel eligePelea = new JLabel("Elige una pelea no realizada:");
+		eligePelea.setFont(new Font("Tahoma", Font.BOLD, 20));
+		eligePelea.setBounds(16, 50, 322, 60);
+		panelApuestas.add(eligePelea);
+		panelApuestas.setVisible(false);
+		
+		JLabel eligeGanador = new JLabel("Elige un ganador de la pelea:");
+		eligeGanador.setFont(new Font("Tahoma", Font.BOLD, 20));
+		eligeGanador.setBounds(16, 140, 322, 60);
+		panelApuestas.add(eligeGanador);
+		panelApuestas.setVisible(false);
+
+		JLabel eligeImporte = new JLabel("Introduce el importe:");
+		eligeImporte.setFont(new Font("Tahoma", Font.BOLD, 20));
+		eligeImporte.setBounds(16, 210, 322, 60);
+		panelApuestas.add(eligeImporte);
+		panelApuestas.setVisible(false);
+
+		eligeImporte.setBounds(16, 230, 322, 60);
+		panelApuestas.add(eligeImporte);
+		panelApuestas.setVisible(false);
+		
+		comboApuesta = new JComboBox();
+		comboApuesta.setBounds(16, 100, 280, 21);
+		panelApuestas.add(comboApuesta);
+
+		Statement stComboApuesta;
+
+		comboApuestaGanador = new JComboBox();
+		comboApuestaGanador.setBounds(16, 190, 280, 21);
+		panelApuestas.add(comboApuestaGanador);
+		
+		importeApuesta = new JTextField();
+		importeApuesta.setBounds(16, 280, 280, 21);
+		panelApuestas.add(importeApuesta);
+		
+		botonApuesta = new JButton("Apostar");
+		botonApuesta.setFont(new Font("Tahoma", Font.BOLD, 16));
+		botonApuesta.setBounds(16, 330, 120, 40);
+		panelApuestas.add(botonApuesta);
+		botonApuesta.addActionListener(this);
+
+		Statement stComboApuestaGanador;
+
+		try {
+			stComboApuesta = miConexion.createStatement();
+			ResultSet comboApuestaLuchadores = stComboApuesta
+					.executeQuery("SELECT CODIGOPELEA, LUCHADOR1, LUCHADOR2 FROM PELEA WHERE REALIZADA = 0");
+			while (comboApuestaLuchadores.next()) {
+				String codigoPelea = comboApuestaLuchadores.getString("CODIGOPELEA");
+				comboApuesta.addItem(codigoPelea + " | " + comboApuestaLuchadores.getString("LUCHADOR1") + " - "
+						+ comboApuestaLuchadores.getString("LUCHADOR2"));
+
+				stComboApuestaGanador = miConexion.createStatement();
+				ResultSet rsComboApuestaGanador = stComboApuestaGanador
+						.executeQuery("SELECT LUCHADOR1, LUCHADOR2 FROM PELEA WHERE CODIGOPELEA = " + codigoPelea);
+				while (rsComboApuestaGanador.next()) {
+					comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR1"));
+					comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR2"));
+				}
+
+				stComboApuestaGanador.close();
+				rsComboApuestaGanador.close();
+			}
+
+			comboApuestaLuchadores.close();
+			stComboApuesta.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		panelRankings = new JPanel();
 		panelRankings.setBackground(new Color(192, 192, 192));
@@ -399,7 +369,7 @@ public class Login extends JFrame {
 		panelLuchadores.setVisible(false);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 1000, 22);
+		menuBar.setBounds(0, 0, 986, 22);
 		interfaz.add(menuBar);
 
 		JMenu menuRankings = new JMenu("Rankings");
@@ -610,6 +580,31 @@ public class Login extends JFrame {
 		menuApuestas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
+				lblUsuarioApuestas.setText("Usuario: " + usuarioApuestas);
+				lblUsuarioApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblUsuarioApuestas.setBounds(16, 4, 241, 57);
+				panelApuestas.add(lblUsuarioApuestas);
+
+				PreparedStatement ps;
+				try {
+					ps = miConexion.prepareStatement("SELECT Monto FROM usuario WHERE NombreUsuario = ?");
+					ps.setString(1, usuarioApuestas);
+					ResultSet rs = ps.executeQuery();
+
+					while (rs.next()) {
+						lblMontoApuestas.setText("Monto: " + rs.getString("Monto") + "€");
+						lblMontoApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+						lblMontoApuestas.setBounds(850, 4, 241, 57);
+						panelApuestas.add(lblMontoApuestas);
+					}
+
+					rs.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 				bienvenida.setVisible(false);
 				if (panelRankings.isVisible() == true) {
 					panelRankings.setVisible(false);
@@ -626,6 +621,24 @@ public class Login extends JFrame {
 		});
 		menuBar.add(menuApuestas);
 
+		JMenu menuLogout = new JMenu("Logout");
+		menuLogout.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				bienvenida.setVisible(false);
+				txtUsuario.setText("");
+				txtContrasena.setText("");
+				interfaz.setVisible(false);
+				login.setVisible(true);
+
+				lblUsuarioApuestas.setText("Usuario: ");
+				lblMontoApuestas.setText("Monto: ");
+
+			}
+		});
+		menuBar.add(Box.createHorizontalGlue());
+		menuBar.add(menuLogout);
+
 		panelEventos = new JPanel();
 		panelEventos.setLayout(null);
 		panelEventos.setBackground(new Color(0, 255, 0));
@@ -636,17 +649,6 @@ public class Login extends JFrame {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 35));
 		lblNewLabel_2.setBounds(414, 168, 158, 50);
 		panelEventos.add(lblNewLabel_2);
-
-		panelApuestas = new JPanel();
-		panelApuestas.setLayout(null);
-		panelApuestas.setBackground(new Color(128, 0, 255));
-		panelApuestas.setBounds(0, 20, 986, 543);
-		interfaz.add(panelApuestas);
-
-		JLabel lblNewLabel_4 = new JLabel("Apuestas");
-		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 47));
-		lblNewLabel_4.setBounds(397, 120, 192, 112);
-		panelApuestas.add(lblNewLabel_4);
 
 		registrarse = new JPanel();
 		registrarse.setLayout(null);
@@ -753,7 +755,7 @@ public class Login extends JFrame {
 								"INSERT INTO usuario (NombreUsuario, Nombre, Contrasena, Email, Monto) VALUES ('"
 										+ txtRegistroUsuario.getText() + "', '" + txtRegistroNombre.getText() + "', '"
 										+ txtRegistroContrasena_1.getText() + "', '" + txtRegistroMail.getText()
-										+ "', 0)");
+										+ "', 50)");
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -808,6 +810,8 @@ public class Login extends JFrame {
 		JButton btnVolverLogin = new JButton("Login");
 		btnVolverLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				txtUsuario.setText("");
+				txtContrasena.setText("");
 				txtRegistroUsuario.setText("");
 				txtRegistroNombre.setText("");
 				txtRegistroContrasena_1.setText("");
@@ -827,9 +831,152 @@ public class Login extends JFrame {
 		btnVolverLogin.setBackground(Color.RED);
 		btnVolverLogin.setBounds(203, 370, 140, 33);
 		registrarse.add(btnVolverLogin);
-		panelApuestas.setVisible(false);
+
+		login = new JPanel();
+		login.setBorder(new LineBorder(new Color(255, 0, 0)));
+		login.setBackground(new Color(0, 0, 0));
+		login.setBounds(298, 35, 389, 354);
+		lamina1.add(login);
+		login.setLayout(null);
+
+		JPanel titulo = new JPanel();
+		titulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		titulo.setBackground(new Color(255, 0, 0));
+		titulo.setBounds(83, 10, 222, 43);
+		login.add(titulo);
+
+		JLabel labelTitulo2_1 = new JLabel("UFC DATABASE");
+		labelTitulo2_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		titulo.add(labelTitulo2_1);
+		JButton btnNewButton = new JButton("Login");
+		btnNewButton.setBackground(new Color(255, 0, 0));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String sql = "SELECT * FROM usuario WHERE NombreUsuario = ? AND Contrasena = ?";
+				PreparedStatement statement = null;
+				try {
+					statement = miConexion.prepareStatement(sql);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					statement.setString(1, txtUsuario.getText());
+					statement.setString(2, txtContrasena.getText());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				ResultSet resultSet = null;
+				try {
+					resultSet = statement.executeQuery();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					if (resultSet.next()) {
+						usuarioApuestas = txtUsuario.getText();
+						login.setVisible(false);
+						interfaz.setVisible(true);
+						bienvenida.setVisible(true);
+					} else {
+						accesoDenegado.setText("Usuario o contraseña incorrectos");
+						accesoDenegado.setVisible(true);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					resultSet.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					statement.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnNewButton.setBounds(125, 269, 141, 37);
+		login.add(btnNewButton);
+
+		JLabel Contrasena = new JLabel("Contraseña:", SwingConstants.CENTER);
+		Contrasena.setForeground(Color.red);
+		Contrasena.setBounds(105, 161, 178, 42);
+		login.add(Contrasena);
+		Contrasena.setFont(new Font("Tahoma", Font.PLAIN, 23));
+
+		txtContrasena = new JPasswordField();
+		txtContrasena.setBounds(105, 213, 178, 19);
+		login.add(txtContrasena);
+
+		JLabel Usuario = new JLabel("Usuario:", SwingConstants.CENTER);
+		Usuario.setBounds(105, 86, 178, 36);
+		login.add(Usuario);
+		Usuario.setForeground(Color.red);
+		Usuario.setFont(new Font("Tahoma", Font.PLAIN, 23));
+
+		txtUsuario = new JTextField();
+		txtUsuario.setBounds(105, 132, 178, 19);
+		login.add(txtUsuario);
+		txtUsuario.setColumns(10);
+
+		JButton btnRegistrarse = new JButton("Registrarse");
+		btnRegistrarse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				login.setVisible(false);
+				registrarse.setVisible(true);
+
+			}
+		});
+		btnRegistrarse.setBounds(125, 311, 141, 33);
+		login.add(btnRegistrarse);
+		btnRegistrarse.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRegistrarse.setBackground(Color.RED);
+
+		accesoDenegado = new JLabel("Acceso denegado", SwingConstants.CENTER);
+		accesoDenegado.setForeground(Color.red);
+		accesoDenegado.setBounds(68, 240, 253, 19);
+		login.add(accesoDenegado);
+
+		mensajeUsuarioCreado = new JLabel("Usuario registrado con exito", SwingConstants.CENTER);
+		mensajeUsuarioCreado.setForeground(Color.GREEN);
+		mensajeUsuarioCreado.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		mensajeUsuarioCreado.setBounds(68, 63, 253, 25);
+		login.add(mensajeUsuarioCreado);
+		mensajeUsuarioCreado.setVisible(false);
+		accesoDenegado.setVisible(false);
 		panelEventos.setVisible(false);
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if (importeApuesta.getText().equals("SELECT MONTO FROM USUARIO WHERE NOMBREUSUARIO = usuarioApuestas")) {
+			// MOSTRAR ERROR DE MONTO
+		}
+
+		else {
+			// GANADOR RANDOM
+			// PELEA PASA DE NO REALIZADA A REALIZADA
+			// SE INTRODUCEN VALORES EN GANADOR Y PERDEDOR
+			
+			/*
+			if (GANADOR RANDOM = GANADOR SELECCIONADO) {
+				// SE SUMA AL MONTO DEL USUARIO importeApuesta
+			}
+			
+			else {
+				// SE RESTA AL MONTO DEL USUARIO importeApuesta
+			}
+			*/
+		}
+		
 	}
 }
 
