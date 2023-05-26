@@ -957,7 +957,7 @@ public class Login extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (importeApuesta.getText().equals("SELECT MONTO FROM USUARIO WHERE NOMBREUSUARIO = usuarioApuestas")) {
+		if (importeApuesta.getText().equals("//SELECT MONTO FROM USUARIO WHERE NOMBREUSUARIO = usuarioApuestas")) {
 			// MOSTRAR ERROR DE MONTO
 		}
 
