@@ -140,37 +140,51 @@ public class Login extends JFrame implements ActionListener {
 		panelApuestas.add(botonApuesta);
 		botonApuesta.addActionListener(this);
 
-		Statement stComboApuestaGanador;
-
 		try {
-			stComboApuesta = miConexion.createStatement();
-			ResultSet comboApuestaLuchadores = stComboApuesta
-					.executeQuery("SELECT CODIGOPELEA, LUCHADOR1, LUCHADOR2 FROM PELEA WHERE REALIZADA = 0");
-			while (comboApuestaLuchadores.next()) {
-				String codigoPelea = comboApuestaLuchadores.getString("CODIGOPELEA");
-				comboApuesta.addItem(codigoPelea + " | " + comboApuestaLuchadores.getString("LUCHADOR1") + " - "
-						+ comboApuestaLuchadores.getString("LUCHADOR2"));
+		    stComboApuesta = miConexion.createStatement();
+		    ResultSet comboApuestaLuchadores = stComboApuesta.executeQuery("SELECT CODIGOPELEA, LUCHADOR1, LUCHADOR2 FROM PELEA WHERE REALIZADA = 0");
+		    
+		    while (comboApuestaLuchadores.next()) {
+		        String codigoPelea = comboApuestaLuchadores.getString("CODIGOPELEA");
+		        String luchador1 = comboApuestaLuchadores.getString("LUCHADOR1");
+		        String luchador2 = comboApuestaLuchadores.getString("LUCHADOR2");
+		        comboApuesta.addItem(codigoPelea + " | " + luchador1 + " - " + luchador2);
+		    }
 
-				stComboApuestaGanador = miConexion.createStatement();
-				ResultSet rsComboApuestaGanador = stComboApuestaGanador
-						.executeQuery("SELECT LUCHADOR1, LUCHADOR2 FROM PELEA WHERE CODIGOPELEA = " + codigoPelea);
-				while (rsComboApuestaGanador.next()) {
-					comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR1"));
-					comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR2"));
-				}
-
-				stComboApuestaGanador.close();
-				rsComboApuestaGanador.close();
-			}
-
-			comboApuestaLuchadores.close();
-			stComboApuesta.close();
-
+		    comboApuestaLuchadores.close();
+		    stComboApuesta.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    e.printStackTrace();
 		}
 
+		// Agregar un ActionListener a comboApuesta para actualizar comboApuestaGanador
+		comboApuesta.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent event) {
+		        try {
+		            // Limpiar los elementos anteriores en comboApuestaGanador
+		            comboApuestaGanador.removeAllItems();
+
+		            // Obtener la opción seleccionada en comboApuesta
+		            String selectedPelea = comboApuesta.getSelectedItem().toString();
+		            String codigoPelea = selectedPelea.split(" \\| ")[0];
+
+		            // Obtener los luchadores de la pelea seleccionada
+		            Statement stComboApuestaGanador = miConexion.createStatement();
+		            ResultSet rsComboApuestaGanador = stComboApuestaGanador.executeQuery("SELECT LUCHADOR1, LUCHADOR2 FROM PELEA WHERE CODIGOPELEA = " + codigoPelea);
+		            while (rsComboApuestaGanador.next()) {
+		                comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR1"));
+		                comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR2"));
+		            }
+
+		            stComboApuestaGanador.close();
+		            rsComboApuestaGanador.close();
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		});
+
+		
 		panelRankings = new JPanel();
 		panelRankings.setBackground(new Color(192, 192, 192));
 		panelRankings.setBounds(0, 20, 986, 543);
