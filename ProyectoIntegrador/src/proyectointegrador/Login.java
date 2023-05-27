@@ -48,6 +48,8 @@ public class Login extends JFrame implements ActionListener {
 	private JComboBox comboApuestaGanador;
 	private JTextField importeApuesta;
 	private JButton botonApuesta;
+	private JLabel mensajeApuesta;
+	private JLabel ganadorApuesta;
 
 	public static void main(String[] args) {
 
@@ -94,7 +96,7 @@ public class Login extends JFrame implements ActionListener {
 		panelApuestas.setLayout(null);
 		panelApuestas.setBounds(0, 20, 986, 543);
 		interfaz.add(panelApuestas);
-		
+
 		lblUsuarioApuestas = new JLabel("Usuario: ");
 		lblMontoApuestas = new JLabel("Monto: ");
 
@@ -103,7 +105,7 @@ public class Login extends JFrame implements ActionListener {
 		eligePelea.setBounds(16, 50, 322, 60);
 		panelApuestas.add(eligePelea);
 		panelApuestas.setVisible(false);
-		
+
 		JLabel eligeGanador = new JLabel("Elige un ganador de la pelea:");
 		eligeGanador.setFont(new Font("Tahoma", Font.BOLD, 20));
 		eligeGanador.setBounds(16, 140, 322, 60);
@@ -112,79 +114,47 @@ public class Login extends JFrame implements ActionListener {
 
 		JLabel eligeImporte = new JLabel("Introduce el importe:");
 		eligeImporte.setFont(new Font("Tahoma", Font.BOLD, 20));
-		eligeImporte.setBounds(16, 210, 322, 60);
+		eligeImporte.setBounds(-49, 318, 322, 60);
 		panelApuestas.add(eligeImporte);
 		panelApuestas.setVisible(false);
 
 		eligeImporte.setBounds(16, 230, 322, 60);
 		panelApuestas.add(eligeImporte);
 		panelApuestas.setVisible(false);
-		
+
 		comboApuesta = new JComboBox();
 		comboApuesta.setBounds(16, 100, 280, 21);
 		panelApuestas.add(comboApuesta);
 
-		Statement stComboApuesta;
-
 		comboApuestaGanador = new JComboBox();
 		comboApuestaGanador.setBounds(16, 190, 280, 21);
 		panelApuestas.add(comboApuestaGanador);
-		
+
 		importeApuesta = new JTextField();
 		importeApuesta.setBounds(16, 280, 280, 21);
 		panelApuestas.add(importeApuesta);
-		
+
 		botonApuesta = new JButton("Apostar");
 		botonApuesta.setFont(new Font("Tahoma", Font.BOLD, 16));
 		botonApuesta.setBounds(16, 330, 120, 40);
 		panelApuestas.add(botonApuesta);
 		botonApuesta.addActionListener(this);
 
-		try {
-		    stComboApuesta = miConexion.createStatement();
-		    ResultSet comboApuestaLuchadores = stComboApuesta.executeQuery("SELECT CODIGOPELEA, LUCHADOR1, LUCHADOR2 FROM PELEA WHERE REALIZADA = 0");
-		    
-		    while (comboApuestaLuchadores.next()) {
-		        String codigoPelea = comboApuestaLuchadores.getString("CODIGOPELEA");
-		        String luchador1 = comboApuestaLuchadores.getString("LUCHADOR1");
-		        String luchador2 = comboApuestaLuchadores.getString("LUCHADOR2");
-		        comboApuesta.addItem(codigoPelea + " | " + luchador1 + " - " + luchador2);
-		    }
+		mensajeApuesta = new JLabel("");
+		mensajeApuesta.setFont(new Font("Tahoma", Font.BOLD, 16));
+		mensajeApuesta.setForeground(Color.red);
+		mensajeApuesta.setBounds(16, 400, 400, 19);
+		panelApuestas.add(mensajeApuesta);
+		mensajeApuesta.setVisible(false);
 
-		    comboApuestaLuchadores.close();
-		    stComboApuesta.close();
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		}
+		ganadorApuesta = new JLabel("");
+		ganadorApuesta.setFont(new Font("Tahoma", Font.BOLD, 16));
+		ganadorApuesta.setBounds(16, 450, 400, 19);
+		panelApuestas.add(ganadorApuesta);
+		ganadorApuesta.setVisible(false);
 
-		// Agregar un ActionListener a comboApuesta para actualizar comboApuestaGanador
-		comboApuesta.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent event) {
-		        try {
-		            // Limpiar los elementos anteriores en comboApuestaGanador
-		            comboApuestaGanador.removeAllItems();
+		actualizarCombosApuestas();
 
-		            // Obtener la opción seleccionada en comboApuesta
-		            String selectedPelea = comboApuesta.getSelectedItem().toString();
-		            String codigoPelea = selectedPelea.split(" \\| ")[0];
-
-		            // Obtener los luchadores de la pelea seleccionada
-		            Statement stComboApuestaGanador = miConexion.createStatement();
-		            ResultSet rsComboApuestaGanador = stComboApuestaGanador.executeQuery("SELECT LUCHADOR1, LUCHADOR2 FROM PELEA WHERE CODIGOPELEA = " + codigoPelea);
-		            while (rsComboApuestaGanador.next()) {
-		                comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR1"));
-		                comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR2"));
-		            }
-
-		            stComboApuestaGanador.close();
-		            rsComboApuestaGanador.close();
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		});
-
-		
 		panelRankings = new JPanel();
 		panelRankings.setBackground(new Color(192, 192, 192));
 		panelRankings.setBounds(0, 20, 986, 543);
@@ -414,6 +384,8 @@ public class Login extends JFrame implements ActionListener {
 				if (rankingPesoPesado.isVisible() == true) {
 					rankingPesoPesado.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelRankings.setVisible(true);
 				rankingPesoPluma.setVisible(true);
 				menuPesoPluma.setSelected(false);
@@ -447,6 +419,8 @@ public class Login extends JFrame implements ActionListener {
 				if (rankingPesoPesado.isVisible() == true) {
 					rankingPesoPesado.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelRankings.setVisible(true);
 				rankingPesoMosca.setVisible(true);
 				menuPesoMosca.setSelected(false);
@@ -479,6 +453,8 @@ public class Login extends JFrame implements ActionListener {
 				if (rankingPesoPesado.isVisible() == true) {
 					rankingPesoPesado.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelRankings.setVisible(true);
 				rankingPesoLigero.setVisible(true);
 				menuPesoLigero.setSelected(false);
@@ -511,6 +487,8 @@ public class Login extends JFrame implements ActionListener {
 				if (rankingPesoPesado.isVisible() == true) {
 					rankingPesoPesado.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelRankings.setVisible(true);
 				rankingPesoMedio.setVisible(true);
 				menuPesoMedio.setSelected(false);
@@ -564,6 +542,8 @@ public class Login extends JFrame implements ActionListener {
 				if (panelApuestas.isVisible() == true) {
 					panelApuestas.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelLuchadores.setVisible(true);
 				menuLuchadores.setSelected(false);
 			}
@@ -584,6 +564,8 @@ public class Login extends JFrame implements ActionListener {
 				if (panelApuestas.isVisible() == true) {
 					panelApuestas.setVisible(false);
 				}
+				mensajeApuesta.setVisible(false);
+				ganadorApuesta.setVisible(false);
 				panelEventos.setVisible(true);
 				menuEventos.setSelected(false);
 			}
@@ -600,24 +582,7 @@ public class Login extends JFrame implements ActionListener {
 				lblUsuarioApuestas.setBounds(16, 4, 241, 57);
 				panelApuestas.add(lblUsuarioApuestas);
 
-				PreparedStatement ps;
-				try {
-					ps = miConexion.prepareStatement("SELECT Monto FROM usuario WHERE NombreUsuario = ?");
-					ps.setString(1, usuarioApuestas);
-					ResultSet rs = ps.executeQuery();
-
-					while (rs.next()) {
-						lblMontoApuestas.setText("Monto: " + rs.getString("Monto") + "€");
-						lblMontoApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
-						lblMontoApuestas.setBounds(850, 4, 241, 57);
-						panelApuestas.add(lblMontoApuestas);
-					}
-
-					rs.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				actualizarMontoApuestas();
 
 				bienvenida.setVisible(false);
 				if (panelRankings.isVisible() == true) {
@@ -968,30 +933,334 @@ public class Login extends JFrame implements ActionListener {
 
 	}
 
+	private void actualizarCombosApuestas() {
+
+		comboApuesta.addItem("Elige una pelea");
+
+		Statement stComboApuesta;
+
+		try {
+			stComboApuesta = miConexion.createStatement();
+			ResultSet comboApuestaLuchadores = stComboApuesta
+					.executeQuery("SELECT CODIGOPELEA, LUCHADOR1, LUCHADOR2 FROM PELEA WHERE REALIZADA = 0");
+
+			while (comboApuestaLuchadores.next()) {
+				String codigoPelea = comboApuestaLuchadores.getString("CODIGOPELEA");
+				String luchador1 = comboApuestaLuchadores.getString("LUCHADOR1");
+				String luchador2 = comboApuestaLuchadores.getString("LUCHADOR2");
+				comboApuesta.addItem(codigoPelea + " | " + luchador1 + " - " + luchador2);
+			}
+
+			comboApuestaLuchadores.close();
+			stComboApuesta.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		comboApuesta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+
+				comboApuestaGanador.removeAllItems();
+
+				if (comboApuesta.getSelectedIndex() > 0) {
+					try {
+
+						String selectedPelea = comboApuesta.getSelectedItem().toString();
+						String codigoPelea = selectedPelea.split(" \\| ")[0];
+
+						Statement stComboApuestaGanador = miConexion.createStatement();
+						ResultSet rsComboApuestaGanador = stComboApuestaGanador.executeQuery(
+								"SELECT LUCHADOR1, LUCHADOR2 FROM PELEA WHERE CODIGOPELEA = " + codigoPelea);
+						while (rsComboApuestaGanador.next()) {
+							comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR1"));
+							comboApuestaGanador.addItem(rsComboApuestaGanador.getString("LUCHADOR2"));
+						}
+
+						stComboApuestaGanador.close();
+						rsComboApuestaGanador.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		mensajeApuesta.setVisible(false);
+		ganadorApuesta.setVisible(false);
+		try {
+			String consulta = "SELECT MONTO FROM USUARIO WHERE NOMBREUSUARIO = '" + usuarioApuestas + "'";
 
-		if (importeApuesta.getText().equals("//SELECT MONTO FROM USUARIO WHERE NOMBREUSUARIO = usuarioApuestas")) {
-			// MOSTRAR ERROR DE MONTO
-		}
+			Statement statement = miConexion.createStatement();
+			ResultSet resultSet = statement.executeQuery(consulta);
 
-		else {
-			// GANADOR RANDOM
-			// PELEA PASA DE NO REALIZADA A REALIZADA
-			// SE INTRODUCEN VALORES EN GANADOR Y PERDEDOR
-			
-			/*
-			if (GANADOR RANDOM = GANADOR SELECCIONADO) {
-				// SE SUMA AL MONTO DEL USUARIO importeApuesta
+			while (resultSet.next()) {
+				int monto = resultSet.getInt("MONTO");
+
+				int verificador = 0;
+
+				for (int i = 0; i < importeApuesta.getText().length(); i++) {
+					if (!Character.isDigit(importeApuesta.getText().charAt(i))) {
+						verificador++;
+					}
+				}
+
+				if (!importeApuesta.getText().isEmpty() && verificador == 0) {
+					int importe = Integer.parseInt(importeApuesta.getText());
+
+					if (importe == 0) {
+						mensajeApuesta.setForeground(Color.red);
+						mensajeApuesta.setText("Ingrese un importe válido");
+						mensajeApuesta.setVisible(true);
+					}
+
+					else if (monto < importe) {
+						mensajeApuesta.setForeground(Color.red);
+						mensajeApuesta.setText("Dinero insuficiente");
+						mensajeApuesta.setVisible(true);
+					}
+
+					else if (comboApuesta.getSelectedIndex() == -1 || comboApuestaGanador.getSelectedIndex() == -1) {
+						mensajeApuesta.setForeground(Color.red);
+						mensajeApuesta.setText("Seleccione una pelea y un ganador");
+						mensajeApuesta.setVisible(true);
+					}
+
+					else {
+
+						int random = (int) (Math.random() * 2);
+
+						String sqlConsulta = "SELECT CodigoPelea FROM pelea WHERE CodigoPelea = ?";
+						int codigoPeleaSeleccionada = 0;
+
+						try {
+							PreparedStatement declaraciónConsulta = miConexion.prepareStatement(sqlConsulta);
+
+							String valorComboApuesta = comboApuesta.getSelectedItem().toString();
+							declaraciónConsulta.setString(1, valorComboApuesta);
+
+							ResultSet resultado = declaraciónConsulta.executeQuery();
+
+							if (resultado.next()) {
+								codigoPeleaSeleccionada = resultado.getInt("CodigoPelea");
+							}
+
+							resultado.close();
+							declaraciónConsulta.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+						String sqlActualizacion = "UPDATE pelea SET realizada = ?, ganador = ?, perdedor = ? WHERE CodigoPelea = ?";
+
+						try {
+							PreparedStatement declaraciónActualizacion = miConexion.prepareStatement(sqlActualizacion);
+
+							String nuevoGanador = "";
+							String nuevoPerdedor = "";
+
+							if (random == 0) {
+								String sqlLuchador1 = "SELECT Luchador1 FROM pelea WHERE CodigoPelea = ?";
+								try {
+									PreparedStatement declaraciónLuchador1 = miConexion.prepareStatement(sqlLuchador1);
+									declaraciónLuchador1.setInt(1, codigoPeleaSeleccionada);
+									ResultSet resultadoLuchador1 = declaraciónLuchador1.executeQuery();
+									if (resultadoLuchador1.next()) {
+										nuevoGanador = resultadoLuchador1.getString("Luchador1");
+									}
+									resultadoLuchador1.close();
+									declaraciónLuchador1.close();
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+
+								String sqlLuchador2 = "SELECT Luchador2 FROM pelea WHERE CodigoPelea = ?";
+								try {
+									PreparedStatement declaraciónLuchador2 = miConexion.prepareStatement(sqlLuchador2);
+									declaraciónLuchador2.setInt(1, codigoPeleaSeleccionada);
+									ResultSet resultadoLuchador2 = declaraciónLuchador2.executeQuery();
+									if (resultadoLuchador2.next()) {
+										nuevoPerdedor = resultadoLuchador2.getString("Luchador2");
+									}
+									resultadoLuchador2.close();
+									declaraciónLuchador2.close();
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+							} else if (random == 1) {
+								String sqlLuchador1 = "SELECT Luchador2 FROM pelea WHERE CodigoPelea = ?";
+								try {
+									PreparedStatement declaraciónLuchador1 = miConexion.prepareStatement(sqlLuchador1);
+									declaraciónLuchador1.setInt(1, codigoPeleaSeleccionada);
+									ResultSet resultadoLuchador1 = declaraciónLuchador1.executeQuery();
+									if (resultadoLuchador1.next()) {
+										nuevoGanador = resultadoLuchador1.getString("Luchador2");
+									}
+									resultadoLuchador1.close();
+									declaraciónLuchador1.close();
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+
+								String sqlLuchador2 = "SELECT Luchador1 FROM pelea WHERE CodigoPelea = ?";
+								try {
+									PreparedStatement declaraciónLuchador2 = miConexion.prepareStatement(sqlLuchador2);
+									declaraciónLuchador2.setInt(1, codigoPeleaSeleccionada);
+									ResultSet resultadoLuchador2 = declaraciónLuchador2.executeQuery();
+									if (resultadoLuchador2.next()) {
+										nuevoPerdedor = resultadoLuchador2.getString("Luchador1");
+									}
+									resultadoLuchador2.close();
+									declaraciónLuchador2.close();
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+							}
+
+							declaraciónActualizacion.setBoolean(1, true);
+							declaraciónActualizacion.setString(2, nuevoGanador);
+							declaraciónActualizacion.setString(3, nuevoPerdedor);
+							declaraciónActualizacion.setInt(4, codigoPeleaSeleccionada);
+
+							declaraciónActualizacion.executeUpdate();
+							declaraciónActualizacion.close();
+
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+						// SE EVALÚA SI LA OPCIÓN SELECCIONADA (GANADOR) FUE LA CORRECTA
+
+						String sqlComprobarGanador = "SELECT Ganador FROM pelea WHERE CodigoPelea = ?";
+						String ganadorSeleccionado = comboApuestaGanador.getSelectedItem().toString();
+
+						try {
+							PreparedStatement declaraciónComprobarGanador = miConexion
+									.prepareStatement(sqlComprobarGanador);
+							declaraciónComprobarGanador.setInt(1, codigoPeleaSeleccionada);
+							ResultSet resultadoGanador = declaraciónComprobarGanador.executeQuery();
+
+							if (resultadoGanador.next()) {
+								String ganador = resultadoGanador.getString("Ganador");
+
+								if (ganador.equals(ganadorSeleccionado)) {
+									mensajeApuesta.setForeground(Color.green);
+									mensajeApuesta.setText("Has ganado " + importeApuesta.getText() + "€");
+									mensajeApuesta.setVisible(true);
+
+									ganadorApuesta.setText("Ganador: " + ganador);
+									ganadorApuesta.setVisible(true);
+
+									String sqlActualizar = "UPDATE usuario SET Monto = ((SELECT Monto FROM usuario WHERE NombreUsuario = ?) + ?) WHERE NombreUsuario = ?";
+									int dineroGanado = Integer.parseInt(importeApuesta.getText());
+
+									try {
+										PreparedStatement declaración = miConexion.prepareStatement(sqlActualizar);
+										declaración.setString(1, usuarioApuestas);
+										declaración.setInt(2, dineroGanado);
+										declaración.setString(3, usuarioApuestas);
+										declaración.executeUpdate();
+									} catch (SQLException e2) {
+										e2.printStackTrace();
+									}
+
+									actualizarMontoApuestas();
+
+									importeApuesta.setText("");
+
+									comboApuesta.removeItemAt(comboApuesta.getSelectedIndex());
+
+								}
+
+								else {
+									mensajeApuesta.setForeground(Color.red);
+									mensajeApuesta.setText("Has perdido " + importeApuesta.getText() + "€");
+									mensajeApuesta.setVisible(true);
+
+									ganadorApuesta.setText("Ganador: " + ganador);
+									ganadorApuesta.setVisible(true);
+
+									String sqlActualizar = "UPDATE usuario SET Monto = ((SELECT Monto FROM usuario WHERE NombreUsuario = ?) - ?) WHERE NombreUsuario = ?";
+									int dineroPerdido = Integer.parseInt(importeApuesta.getText());
+
+									try {
+										PreparedStatement declaración = miConexion.prepareStatement(sqlActualizar);
+										declaración.setString(1, usuarioApuestas);
+										declaración.setInt(2, dineroPerdido);
+										declaración.setString(3, usuarioApuestas);
+										declaración.executeUpdate();
+									} catch (SQLException e2) {
+										e2.printStackTrace();
+									}
+
+									actualizarMontoApuestas();
+
+									importeApuesta.setText("");
+
+									comboApuesta.removeItemAt(comboApuesta.getSelectedIndex());
+
+								}
+							}
+
+							resultadoGanador.close();
+							declaraciónComprobarGanador.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+					}
+				}
+
+				else {
+					mensajeApuesta.setForeground(Color.red);
+					mensajeApuesta.setText("Ingrese un importe válido");
+					mensajeApuesta.setVisible(true);
+				}
+
 			}
-			
-			else {
-				// SE RESTA AL MONTO DEL USUARIO importeApuesta
-			}
-			*/
+
+			resultSet.close();
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
-		
 	}
+
+	private void actualizarMontoApuestas() {
+
+		PreparedStatement ps;
+		try {
+			ps = miConexion.prepareStatement("SELECT Monto FROM usuario WHERE NombreUsuario = ?");
+			ps.setString(1, usuarioApuestas);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				lblMontoApuestas.setText("Monto: " + rs.getString("Monto") + "€");
+				lblMontoApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblMontoApuestas.setBounds(850, 4, 241, 57);
+				panelApuestas.add(lblMontoApuestas);
+			}
+
+			rs.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+
+	private int getCodigo(String string) {
+
+		String[] codigoString = string.split("\\ ");
+
+		int codigo = Integer.parseInt(codigoString[0]);
+
+		return codigo;
+	}
+
 }
 
 class ResultSetModeloTabla extends AbstractTableModel {
