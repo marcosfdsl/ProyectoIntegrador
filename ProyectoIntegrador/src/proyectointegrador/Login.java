@@ -65,7 +65,7 @@ public class Login extends JFrame implements ActionListener {
 	public Login() {
 		
 		try {
-			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "USUARIO (sastre o pablo)", "1234");
+			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "USUARIO (marcos, sastre o pablo)", "1234");
 			miStatement = miConexion.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
