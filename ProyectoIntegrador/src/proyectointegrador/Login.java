@@ -21,6 +21,9 @@ public class Login extends JFrame implements ActionListener {
 	private JPanel panelRankings;
 	private JPanel panelLuchadores;
 	private JPanel panelEventos;
+	private static JComboBox<String> comboEventos;
+	private JScrollPane scrollPaneEventos;
+	private JTable tablaEventos;
 	private JPanel panelApuestas;
 	private JPanel rankingPesoPluma;
 	private JPanel rankingPesoMosca;
@@ -62,8 +65,7 @@ public class Login extends JFrame implements ActionListener {
 	public Login() {
 		
 		try {
-			//miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "marcos", "1234");
-			miConexion = DriverManager.getConnection("jdbc:mysql://localhost/ufc_db", "root", "");
+			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "USUARIO (sastre o pablo)", "1234");
 			miStatement = miConexion.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -89,21 +91,314 @@ public class Login extends JFrame implements ActionListener {
 		interfaz = new JPanel();
 		interfaz.setBounds(0, 0, 986, 563);
 		interfaz.setVisible(false);
-
-		bienvenida = new JPanel();
-		bienvenida.setBounds(0, 21, 986, 542);
-		lamina1.add(bienvenida);
-		bienvenida.setLayout(null);
-		bienvenida.setVisible(false);
-
-		JLabel imagenBienvenida = new JLabel("");
-		imagenBienvenida.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/LOGO.png")));
-		imagenBienvenida.setBounds(0, 0, 1000, 600);
-		bienvenida.add(imagenBienvenida);
+		
+				bienvenida = new JPanel();
+				bienvenida.setBounds(0, 21, 986, 542);
+				lamina1.add(bienvenida);
+				bienvenida.setLayout(null);
+				bienvenida.setVisible(false);
+				
+						JLabel imagenBienvenida = new JLabel("");
+						imagenBienvenida.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/LOGO.png")));
+						imagenBienvenida.setBounds(0, 0, 1000, 600);
+						bienvenida.add(imagenBienvenida);
 		lamina1.add(interfaz);
 		lamina1.add(interfaz);
 
 		interfaz.setLayout(null);
+				
+						JMenuBar menuBar = new JMenuBar();
+						menuBar.setBounds(0, 0, 986, 22);
+						interfaz.add(menuBar);
+						
+								JMenu menuRankings = new JMenu("Rankings");
+								menuBar.add(menuRankings);
+								
+										JMenuItem menuPesoPluma = new JMenuItem("Peso Pluma");
+										menuPesoPluma.addActionListener(new ActionListener() {
+											public void actionPerformed(ActionEvent e) {
+												bienvenida.setVisible(false);
+												if (panelLuchadores.isVisible() == true) {
+													panelLuchadores.setVisible(false);
+												}
+												if (panelEventos.isVisible() == true) {
+													panelEventos.setVisible(false);
+												}
+												if (panelApuestas.isVisible() == true) {
+													panelApuestas.setVisible(false);
+												}
+												if (rankingPesoMosca.isVisible() == true) {
+													rankingPesoMosca.setVisible(false);
+												}
+												if (rankingPesoLigero.isVisible() == true) {
+													rankingPesoLigero.setVisible(false);
+												}
+												if (rankingPesoMedio.isVisible() == true) {
+													rankingPesoMedio.setVisible(false);
+												}
+												if (rankingPesoPesado.isVisible() == true) {
+													rankingPesoPesado.setVisible(false);
+												}
+												mensajeApuesta.setVisible(false);
+												ganadorApuesta.setVisible(false);
+												panelRankings.setVisible(true);
+												rankingPesoPluma.setVisible(true);
+												menuPesoPluma.setSelected(false);
+
+											}
+										});
+										menuRankings.add(menuPesoPluma);
+										
+												JMenuItem menuPesoMosca = new JMenuItem("Peso Mosca");
+												menuPesoMosca.addActionListener(new ActionListener() {
+													public void actionPerformed(ActionEvent e) {
+														bienvenida.setVisible(false);
+														if (panelLuchadores.isVisible() == true) {
+															panelLuchadores.setVisible(false);
+														}
+														if (panelEventos.isVisible() == true) {
+															panelEventos.setVisible(false);
+														}
+														if (panelApuestas.isVisible() == true) {
+															panelApuestas.setVisible(false);
+														}
+														if (rankingPesoPluma.isVisible() == true) {
+															rankingPesoPluma.setVisible(false);
+														}
+														if (rankingPesoLigero.isVisible() == true) {
+															rankingPesoLigero.setVisible(false);
+														}
+														if (rankingPesoMedio.isVisible() == true) {
+															rankingPesoMedio.setVisible(false);
+														}
+														if (rankingPesoPesado.isVisible() == true) {
+															rankingPesoPesado.setVisible(false);
+														}
+														mensajeApuesta.setVisible(false);
+														ganadorApuesta.setVisible(false);
+														panelRankings.setVisible(true);
+														rankingPesoMosca.setVisible(true);
+														menuPesoMosca.setSelected(false);
+													}
+												});
+												menuRankings.add(menuPesoMosca);
+												
+														JMenuItem menuPesoLigero = new JMenuItem("Peso Ligero");
+														menuPesoLigero.addActionListener(new ActionListener() {
+															public void actionPerformed(ActionEvent e) {
+																bienvenida.setVisible(false);
+																if (panelLuchadores.isVisible() == true) {
+																	panelLuchadores.setVisible(false);
+																}
+																if (panelEventos.isVisible() == true) {
+																	panelEventos.setVisible(false);
+																}
+																if (panelApuestas.isVisible() == true) {
+																	panelApuestas.setVisible(false);
+																}
+																if (rankingPesoPluma.isVisible() == true) {
+																	rankingPesoPluma.setVisible(false);
+																}
+																if (rankingPesoMosca.isVisible() == true) {
+																	rankingPesoMosca.setVisible(false);
+																}
+																if (rankingPesoMedio.isVisible() == true) {
+																	rankingPesoMedio.setVisible(false);
+																}
+																if (rankingPesoPesado.isVisible() == true) {
+																	rankingPesoPesado.setVisible(false);
+																}
+																mensajeApuesta.setVisible(false);
+																ganadorApuesta.setVisible(false);
+																panelRankings.setVisible(true);
+																rankingPesoLigero.setVisible(true);
+																menuPesoLigero.setSelected(false);
+															}
+														});
+														menuRankings.add(menuPesoLigero);
+														
+																JMenuItem menuPesoMedio = new JMenuItem("Peso Medio");
+																menuPesoMedio.addActionListener(new ActionListener() {
+																	public void actionPerformed(ActionEvent e) {
+																		bienvenida.setVisible(false);
+																		if (panelLuchadores.isVisible() == true) {
+																			panelLuchadores.setVisible(false);
+																		}
+																		if (panelEventos.isVisible() == true) {
+																			panelEventos.setVisible(false);
+																		}
+																		if (panelApuestas.isVisible() == true) {
+																			panelApuestas.setVisible(false);
+																		}
+																		if (rankingPesoPluma.isVisible() == true) {
+																			rankingPesoPluma.setVisible(false);
+																		}
+																		if (rankingPesoMosca.isVisible() == true) {
+																			rankingPesoMosca.setVisible(false);
+																		}
+																		if (rankingPesoLigero.isVisible() == true) {
+																			rankingPesoLigero.setVisible(false);
+																		}
+																		if (rankingPesoPesado.isVisible() == true) {
+																			rankingPesoPesado.setVisible(false);
+																		}
+																		mensajeApuesta.setVisible(false);
+																		ganadorApuesta.setVisible(false);
+																		panelRankings.setVisible(true);
+																		rankingPesoMedio.setVisible(true);
+																		menuPesoMedio.setSelected(false);
+																	}
+																});
+																menuRankings.add(menuPesoMedio);
+																
+																		JMenuItem menuPesoPesado = new JMenuItem("Peso Pesado");
+																		menuPesoPesado.addActionListener(new ActionListener() {
+																			public void actionPerformed(ActionEvent e) {
+																				bienvenida.setVisible(false);
+																				if (panelLuchadores.isVisible() == true) {
+																					panelLuchadores.setVisible(false);
+																				}
+																				if (panelEventos.isVisible() == true) {
+																					panelEventos.setVisible(false);
+																				}
+																				if (panelApuestas.isVisible() == true) {
+																					panelApuestas.setVisible(false);
+																				}
+																				if (rankingPesoPluma.isVisible() == true) {
+																					rankingPesoPluma.setVisible(false);
+																				}
+																				if (rankingPesoMosca.isVisible() == true) {
+																					rankingPesoMosca.setVisible(false);
+																				}
+																				if (rankingPesoLigero.isVisible() == true) {
+																					rankingPesoLigero.setVisible(false);
+																				}
+																				if (rankingPesoMedio.isVisible() == true) {
+																					rankingPesoMedio.setVisible(false);
+																				}
+																				panelRankings.setVisible(true);
+																				rankingPesoPesado.setVisible(true);
+																				menuPesoPesado.setSelected(false);
+																			}
+																		});
+																		menuRankings.add(menuPesoPesado);
+																		
+																				JMenu menuLuchadores = new JMenu("Luchadores");
+																				menuLuchadores.addMouseListener(new MouseAdapter() {
+																					@Override
+																					public void mouseClicked(MouseEvent e) {
+																						bienvenida.setVisible(false);
+																						if (panelRankings.isVisible() == true) {
+																							panelRankings.setVisible(false);
+																						}
+																						if (panelEventos.isVisible() == true) {
+																							panelEventos.setVisible(false);
+																						}
+																						if (panelApuestas.isVisible() == true) {
+																							panelApuestas.setVisible(false);
+																						}
+																						mensajeApuesta.setVisible(false);
+																						ganadorApuesta.setVisible(false);
+																						panelLuchadores.setVisible(true);
+																						menuLuchadores.setSelected(false);
+																					}
+																				});
+																				menuBar.add(menuLuchadores);
+																				
+																						JMenu menuEventos = new JMenu("Eventos");
+																						menuEventos.addMouseListener(new MouseAdapter() {
+																							@Override
+																							public void mouseClicked(MouseEvent e) {
+																								bienvenida.setVisible(false);
+																								if (panelRankings.isVisible() == true) {
+																									panelRankings.setVisible(false);
+																								}
+																								if (panelLuchadores.isVisible() == true) {
+																									panelLuchadores.setVisible(false);
+																								}
+																								if (panelApuestas.isVisible() == true) {
+																									panelApuestas.setVisible(false);
+																								}
+																								mensajeApuesta.setVisible(false);
+																								ganadorApuesta.setVisible(false);
+																								panelEventos.setVisible(true);
+																								menuEventos.setSelected(false);
+																							}
+																						});
+																						menuBar.add(menuEventos);
+																						
+																								JMenu menuApuestas = new JMenu("Apuestas");
+																								menuApuestas.addMouseListener(new MouseAdapter() {
+																									@Override
+																									public void mouseClicked(MouseEvent e) {
+
+																										lblUsuarioApuestas.setText("Usuario: " + usuarioApuestas);
+																										lblUsuarioApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+																										lblUsuarioApuestas.setBounds(16, 4, 241, 57);
+																										panelApuestas.add(lblUsuarioApuestas);
+
+																										actualizarMontoApuestas();
+
+																										bienvenida.setVisible(false);
+																										if (panelRankings.isVisible() == true) {
+																											panelRankings.setVisible(false);
+																										}
+																										if (panelLuchadores.isVisible() == true) {
+																											panelLuchadores.setVisible(false);
+																										}
+																										if (panelEventos.isVisible() == true) {
+																											panelEventos.setVisible(false);
+																										}
+																										panelApuestas.setVisible(true);
+																										menuApuestas.setSelected(false);
+																									}
+																								});
+																								menuBar.add(menuApuestas);
+																								
+																										JMenu menuLogout = new JMenu("Logout");
+																										menuLogout.addMouseListener(new MouseAdapter() {
+																											@Override
+																											public void mouseClicked(MouseEvent e) {
+																												bienvenida.setVisible(false);
+																												txtUsuario.setText("");
+																												txtContrasena.setText("");
+																												interfaz.setVisible(false);
+																												login.setVisible(true);
+
+																												lblUsuarioApuestas.setText("Usuario: ");
+																												lblMontoApuestas.setText("Monto: ");
+
+																											}
+																										});
+																										menuBar.add(Box.createHorizontalGlue());
+																										menuBar.add(menuLogout);
+		
+				panelEventos = new JPanel();
+				panelEventos.setLayout(null);
+				panelEventos.setBounds(0, 20, 986, 543);
+				interfaz.add(panelEventos);
+				
+						comboEventos = new JComboBox<String>();
+						comboEventos.setBounds(89, 107, 250, 21);
+						panelEventos.add(comboEventos);
+						
+						tablaEventos = new JTable();
+						scrollPaneEventos = new JScrollPane(tablaEventos);
+						scrollPaneEventos.setBounds(89, 154, 800, 105);
+						panelEventos.add(scrollPaneEventos);
+						
+						JLabel labelEventos = new JLabel("Selecciona un evento:");
+						labelEventos.setFont(new Font("Tahoma", Font.BOLD, 16));
+						labelEventos.setBounds(89, 72, 250, 21);
+						panelEventos.add(labelEventos);
+						
+						comboEventos.addActionListener(e -> {
+							String seleccion = (String) comboEventos.getSelectedItem();
+							if (seleccion != null) {
+								actualizarTablaEventos(seleccion);
+							}
+						});
+						panelEventos.setVisible(false);
 
 		panelApuestas = new JPanel();
 		panelApuestas.setLayout(null);
@@ -369,283 +664,17 @@ public class Login extends JFrame implements ActionListener {
 		}
 
 		panelLuchadores.setVisible(false);
-
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 986, 22);
-		interfaz.add(menuBar);
-
-		JMenu menuRankings = new JMenu("Rankings");
-		menuBar.add(menuRankings);
-
-		JMenuItem menuPesoPluma = new JMenuItem("Peso Pluma");
-		menuPesoPluma.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(false);
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				if (rankingPesoMosca.isVisible() == true) {
-					rankingPesoMosca.setVisible(false);
-				}
-				if (rankingPesoLigero.isVisible() == true) {
-					rankingPesoLigero.setVisible(false);
-				}
-				if (rankingPesoMedio.isVisible() == true) {
-					rankingPesoMedio.setVisible(false);
-				}
-				if (rankingPesoPesado.isVisible() == true) {
-					rankingPesoPesado.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelRankings.setVisible(true);
-				rankingPesoPluma.setVisible(true);
-				menuPesoPluma.setSelected(false);
-
+		
+		try {
+			Statement stComboApuesta = miConexion.createStatement();
+			ResultSet comboApuestaLuchadores = stComboApuesta.executeQuery("SELECT NOMBRE FROM EVENTO");
+			while (comboApuestaLuchadores.next()) {
+				comboEventos.addItem(comboApuestaLuchadores.getString("NOMBRE"));
 			}
-		});
-		menuRankings.add(menuPesoPluma);
-
-		JMenuItem menuPesoMosca = new JMenuItem("Peso Mosca");
-		menuPesoMosca.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(false);
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				if (rankingPesoPluma.isVisible() == true) {
-					rankingPesoPluma.setVisible(false);
-				}
-				if (rankingPesoLigero.isVisible() == true) {
-					rankingPesoLigero.setVisible(false);
-				}
-				if (rankingPesoMedio.isVisible() == true) {
-					rankingPesoMedio.setVisible(false);
-				}
-				if (rankingPesoPesado.isVisible() == true) {
-					rankingPesoPesado.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelRankings.setVisible(true);
-				rankingPesoMosca.setVisible(true);
-				menuPesoMosca.setSelected(false);
-			}
-		});
-		menuRankings.add(menuPesoMosca);
-
-		JMenuItem menuPesoLigero = new JMenuItem("Peso Ligero");
-		menuPesoLigero.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(false);
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				if (rankingPesoPluma.isVisible() == true) {
-					rankingPesoPluma.setVisible(false);
-				}
-				if (rankingPesoMosca.isVisible() == true) {
-					rankingPesoMosca.setVisible(false);
-				}
-				if (rankingPesoMedio.isVisible() == true) {
-					rankingPesoMedio.setVisible(false);
-				}
-				if (rankingPesoPesado.isVisible() == true) {
-					rankingPesoPesado.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelRankings.setVisible(true);
-				rankingPesoLigero.setVisible(true);
-				menuPesoLigero.setSelected(false);
-			}
-		});
-		menuRankings.add(menuPesoLigero);
-
-		JMenuItem menuPesoMedio = new JMenuItem("Peso Medio");
-		menuPesoMedio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(false);
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				if (rankingPesoPluma.isVisible() == true) {
-					rankingPesoPluma.setVisible(false);
-				}
-				if (rankingPesoMosca.isVisible() == true) {
-					rankingPesoMosca.setVisible(false);
-				}
-				if (rankingPesoLigero.isVisible() == true) {
-					rankingPesoLigero.setVisible(false);
-				}
-				if (rankingPesoPesado.isVisible() == true) {
-					rankingPesoPesado.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelRankings.setVisible(true);
-				rankingPesoMedio.setVisible(true);
-				menuPesoMedio.setSelected(false);
-			}
-		});
-		menuRankings.add(menuPesoMedio);
-
-		JMenuItem menuPesoPesado = new JMenuItem("Peso Pesado");
-		menuPesoPesado.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bienvenida.setVisible(false);
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				if (rankingPesoPluma.isVisible() == true) {
-					rankingPesoPluma.setVisible(false);
-				}
-				if (rankingPesoMosca.isVisible() == true) {
-					rankingPesoMosca.setVisible(false);
-				}
-				if (rankingPesoLigero.isVisible() == true) {
-					rankingPesoLigero.setVisible(false);
-				}
-				if (rankingPesoMedio.isVisible() == true) {
-					rankingPesoMedio.setVisible(false);
-				}
-				panelRankings.setVisible(true);
-				rankingPesoPesado.setVisible(true);
-				menuPesoPesado.setSelected(false);
-			}
-		});
-		menuRankings.add(menuPesoPesado);
-
-		JMenu menuLuchadores = new JMenu("Luchadores");
-		menuLuchadores.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				bienvenida.setVisible(false);
-				if (panelRankings.isVisible() == true) {
-					panelRankings.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelLuchadores.setVisible(true);
-				menuLuchadores.setSelected(false);
-			}
-		});
-		menuBar.add(menuLuchadores);
-
-		JMenu menuEventos = new JMenu("Eventos");
-		menuEventos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				bienvenida.setVisible(false);
-				if (panelRankings.isVisible() == true) {
-					panelRankings.setVisible(false);
-				}
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelApuestas.isVisible() == true) {
-					panelApuestas.setVisible(false);
-				}
-				mensajeApuesta.setVisible(false);
-				ganadorApuesta.setVisible(false);
-				panelEventos.setVisible(true);
-				menuEventos.setSelected(false);
-			}
-		});
-		menuBar.add(menuEventos);
-
-		JMenu menuApuestas = new JMenu("Apuestas");
-		menuApuestas.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				lblUsuarioApuestas.setText("Usuario: " + usuarioApuestas);
-				lblUsuarioApuestas.setFont(new Font("Tahoma", Font.PLAIN, 16));
-				lblUsuarioApuestas.setBounds(16, 4, 241, 57);
-				panelApuestas.add(lblUsuarioApuestas);
-
-				actualizarMontoApuestas();
-
-				bienvenida.setVisible(false);
-				if (panelRankings.isVisible() == true) {
-					panelRankings.setVisible(false);
-				}
-				if (panelLuchadores.isVisible() == true) {
-					panelLuchadores.setVisible(false);
-				}
-				if (panelEventos.isVisible() == true) {
-					panelEventos.setVisible(false);
-				}
-				panelApuestas.setVisible(true);
-				menuApuestas.setSelected(false);
-			}
-		});
-		menuBar.add(menuApuestas);
-
-		JMenu menuLogout = new JMenu("Logout");
-		menuLogout.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				bienvenida.setVisible(false);
-				txtUsuario.setText("");
-				txtContrasena.setText("");
-				interfaz.setVisible(false);
-				login.setVisible(true);
-
-				lblUsuarioApuestas.setText("Usuario: ");
-				lblMontoApuestas.setText("Monto: ");
-
-			}
-		});
-		menuBar.add(Box.createHorizontalGlue());
-		menuBar.add(menuLogout);
-
-		panelEventos = new JPanel();
-		panelEventos.setLayout(null);
-		panelEventos.setBackground(new Color(0, 255, 0));
-		panelEventos.setBounds(0, 20, 986, 543);
-		interfaz.add(panelEventos);
-
-		JLabel lblNewLabel_2 = new JLabel("Eventos");
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 35));
-		lblNewLabel_2.setBounds(414, 168, 158, 50);
-		panelEventos.add(lblNewLabel_2);
+			comboApuestaLuchadores.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		registrarse = new JPanel();
 		registrarse.setLayout(null);
@@ -947,7 +976,6 @@ public class Login extends JFrame implements ActionListener {
 		login.add(mensajeUsuarioCreado);
 		mensajeUsuarioCreado.setVisible(false);
 		accesoDenegado.setVisible(false);
-		panelEventos.setVisible(false);
 
 	}
 
@@ -1278,7 +1306,38 @@ public class Login extends JFrame implements ActionListener {
 
 		return codigo;
 	}
+	
+private void actualizarTablaEventos(String selectedOption) {
+		
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("FECHA");
+		model.addColumn("GANADOR");
+		model.addColumn("PERDEDOR");
+		model.addColumn("DIVISIÓN");
+		model.addColumn("REALIZADA");
 
+		try {
+			Statement st = miConexion.createStatement();
+			
+			int i = 1 + (5*(Integer.parseInt(selectedOption.substring(4))-1));
+			int j = 5 + (5*(Integer.parseInt(selectedOption.substring(4))-1));
+			
+			ResultSet rs = st.executeQuery(
+					"SELECT FECHA, GANADOR, PERDEDOR, DIVISIÓN, REALIZADA FROM PELEA WHERE CODIGOPELEA >= " + i + " AND CODIGOPELEA <= " + j);
+
+			while (rs.next()) {
+				model.addRow(new Object[] { rs.getString("FECHA"), rs.getString("GANADOR"), rs.getString("PERDEDOR"), rs.getString("DIVISIÓN"), rs.getString("REALIZADA") });
+			}
+
+			tablaEventos.setModel(model);
+			
+			rs.close();
+			st.close();
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
 }
 
 class ResultSetModeloTabla extends AbstractTableModel {
