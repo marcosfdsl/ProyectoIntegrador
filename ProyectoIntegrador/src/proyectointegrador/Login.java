@@ -54,19 +54,32 @@ public class Login extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 
 		Login frame = new Login();
+		
 		frame.setVisible(true);
+
 	}
 
 	public Login() {
+		
 		try {
-			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "marcos", "1234");
+			//miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.97:3306/prueba", "marcos", "1234");
+			miConexion = DriverManager.getConnection("jdbc:mysql://localhost/ufc_db", "root", "");
 			miStatement = miConexion.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		Toolkit pantalla = Toolkit.getDefaultToolkit();
+		Image miIcono = pantalla.getImage("src/proyectointegrador/UFC.png");
+		
+		setIconImage(miIcono);
+		
+		setTitle("UFC Database");
+		
+		setResizable(false);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(150, 60, 1000, 600);
+		setBounds(250, 100, 1000, 600);
 		lamina1 = new JPanel();
 		lamina1.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -96,6 +109,11 @@ public class Login extends JFrame implements ActionListener {
 		panelApuestas.setLayout(null);
 		panelApuestas.setBounds(0, 20, 986, 543);
 		interfaz.add(panelApuestas);
+		
+		JLabel imagenTopuria = new JLabel("");
+		imagenTopuria.setIcon(new ImageIcon(Login.class.getResource("/proyectointegrador/TOPURIA.png")));
+		imagenTopuria.setBounds(400, 100, 500, 350);
+		panelApuestas.add(imagenTopuria);
 
 		lblUsuarioApuestas = new JLabel("Usuario: ");
 		lblMontoApuestas = new JLabel("Monto: ");
