@@ -66,6 +66,8 @@ public class Login extends JFrame implements ActionListener {
 
 		try {
 			miConexion = DriverManager.getConnection("jdbc:mysql://10.1.200.91:3306/prueba", "marcos", "1234");
+			// miConexion = DriverManager.getConnection("jdbc:mysql://localhost/ufc_db",
+			// "root", "");
 			miStatement = miConexion.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -790,6 +792,23 @@ public class Login extends JFrame implements ActionListener {
 						cuenta4++;
 					}
 					errores++;
+				}
+
+				String nombreUsuario = txtRegistroUsuario.getText();
+				Statement st;
+				try {
+					st = miConexion.createStatement();
+					ResultSet rs = st.executeQuery(
+							"SELECT NombreUsuario FROM usuario WHERE NombreUsuario = '" + nombreUsuario + "'");
+					if (rs.next()) {
+						aviso.setVisible(true);
+						aviso.setText("Usuario ya existente");
+						errores++;
+					}
+					rs.close();
+					st.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 
 				if (errores == 0) {
